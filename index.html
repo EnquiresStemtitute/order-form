@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>購買 Stemtitute 科學套裝</title>
+  <style>
+    :root {
+      --primary-color: #0073aa;
+      --primary-hover: #005177;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --accent-green: #16a34a;
+      --error-red: #dc2626;
+      --warning-bg: #fff7ed;
+      --warning-border: #fed7aa;
+      --warning-text: #9a3412;
+    }
+
+    body { 
+      background-color: var(--bg-color); 
+      font-family: 'Segoe UI', 'PingFang HK', 'Microsoft JhengHei', sans-serif; 
+      color: var(--text-main);
+      line-height: 1.6;
+      margin: 0;
+      padding: 15px;
+    }
+
+    .stem-container { max-width: 720px; margin: 0 auto; }
+    .stem-header { text-align: center; margin: 20px 0 40px; }
+    .stem-header h1 { color: var(--primary-color); font-size: 2.2rem; margin-bottom: 8px; }
+
+    .stem-section { 
+      background: var(--card-bg); 
+      padding: 30px; 
+      border-radius: 16px; 
+      margin-bottom: 25px; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    .stem-section h3 {
+      margin-top: 0; margin-bottom: 20px;
+      font-size: 1.3rem; color: var(--primary-color);
+      border-left: 4px solid var(--primary-color);
+      padding-left: 15px;
+    }
+
+    .stem-form label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.95rem; }
+    .stem-form input, .stem-form select { 
+      width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box; 
+      border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem;
+    }
+
+    .student-block { border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px; background: #fff; }
+    
+    .product-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 15px; }
+    .product-item { 
+      display: flex; align-items: center; gap: 12px; padding: 12px; 
+      border: 1px solid #f1f5f9; border-radius: 8px; cursor: pointer; transition: 0.2s;
+    }
+    .product-item:hover { background: #f8fafc; }
+    .product-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+    .product-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #f1f5f9;
+      flex-shrink: 0;
+    }
+    .product-info-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qty-control { display: flex; align-items: center; gap: 10px; }
+    .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #cbd5e1; background: white; cursor: pointer; font-weight: bold; }
+    .qty-btn:hover { background: #f1f5f9; }
+    .qty-val { min-width: 20px; text-align: center; font-weight: 600; }
+    .row-total { text-align: right; font-weight: 600; color: var(--primary-color); width: 100px; }
+
+    .summary-box { background: #f8fafc; padding: 20px; border-radius: 12px; }
+    .summary-details { margin-bottom: 15px; font-size: 0.9rem; color: var(--text-muted); border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .summary-line.discount { color: var(--error-red); font-weight: 600; }
+    .summary-line.total { 
+      margin-top: 15px; padding-top: 15px; border-top: 2px dashed #cbd5e1;
+      font-size: 1.5rem; color: var(--primary-color); font-weight: 800;
+    }
+
+    .payment-info-box { display: none; margin-top: 15px; padding: 20px; background: #eff6ff; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center; }
+    .qr-code { max-width: 180px; margin: 15px auto; display: block; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: white; padding: 10px; }
+    
+    .review-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+    .review-label { font-weight: bold; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    .review-value { font-size: 1rem; color: var(--text-main); margin-top: 2px; }
+    .review-subtext { font-size: 0.85rem; color: var(--text-muted); }
+
+    .error-msg {
+      display: none;
+      color: var(--error-red);
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .btn { width: 100%; padding: 18px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; display: inline-block; text-align: center; text-decoration: none; box-sizing: border-box; }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn-secondary { background: #e2e8f0; color: #475569; }
+
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    #loading { 
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(255,255,255,0.9); z-index: 1000; flex-direction: column; 
+      align-items: center; justify-content: center; 
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    #custom-alert {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;
+    }
+    .alert-box {
+      background: white; padding: 25px; border-radius: 16px; max-width: 90%; width: 400px; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+  <p id="loading-text" style="margin-top:10px; font-weight:bold;">正在連線...</p>
+</div>
+
+<div id="custom-alert">
+  <div class="alert-box">
+    <p id="alert-msg" style="font-weight: bold; margin-bottom: 20px;"></p>
+    <button class="btn btn-primary" style="padding: 10px 30px;" onclick="closeAlert()">確定</button>
+  </div>
+</div>
+
+<div class="stem-container">
+  <div id="page1" class="page active">
+    <div class="stem-header"><h1>購買 Stemtitute 科學套裝</h1></div>
+
+    <div class="stem-section">
+      <h3>1. 基本資料</h3>
+      <div class="stem-form">
+        <label>收件人姓名</label><input type="text" id="receiver">
+        <label>收件人電郵</label><input type="email" id="email">
+        <label>電話</label><input type="tel" id="phone">
+        <label>郵寄地址</label><input type="text" id="address">
+        <label>購買學生人數</label>
+        <select id="student-count" onchange="generateStudentForms()">
+          <option value="0">請選擇</option>
+          <option value="1">1 位</option>
+          <option value="2">2 位</option>
+          <option value="3">3 位</option>
+          <option value="4">4 位</option>
+          <option value="5">5 位</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="student-container"></div>
+
+    <div class="stem-section">
+      <h3>2. 其他商品</h3>
+      <table class="other-product-table">
+        <thead>
+          <tr>
+            <th>商品名稱</th>
+            <th>數量</th>
+            <th class="row-total">小計</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="product-info-cell">
+                <img src="https://via.placeholder.com/150?text=S" alt="Lab Coat S" class="product-img">
+                <div>
+                  <div style="font-weight:600;">Stemtitute Lab Coat (Size S)</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">HKD 150</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('labcoat-s', -1)">-</button>
+                <span class="qty-val" id="qty-labcoat-s">0</span>
+                <button class="qty-btn" onclick="updateQty('labcoat-s', 1)">+</button>
+              </div>
+            </td>
+            <td class="row-total" id="total-labcoat-s">HKD 0</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-info-cell">
+                <img src="https://via.placeholder.com/150?text=M" alt="Lab Coat M" class="product-img">
+                <div>
+                  <div style="font-weight:600;">Stemtitute Lab Coat (Size M)</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">HKD 150</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('labcoat-m', -1)">-</button>
+                <span class="qty-val" id="qty-labcoat-m">0</span>
+                <button class="qty-btn" onclick="updateQty('labcoat-m', 1)">+</button>
+              </div>
+            </td>
+            <td class="row-total" id="total-labcoat-m">HKD 0</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-info-cell">
+                <img src="https://via.placeholder.com/150?text=L" alt="Lab Coat L" class="product-img">
+                <div>
+                  <div style="font-weight:600;">Stemtitute Lab Coat (Size L)</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">HKD 150</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('labcoat-l', -1)">-</button>
+                <span class="qty-val" id="qty-labcoat-l">0</span>
+                <button class="qty-btn" onclick="updateQty('labcoat-l', 1)">+</button>
+              </div>
+            </td>
+            <td class="row-total" id="total-labcoat-l">HKD 0</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-info-cell">
+                <img src="https://via.placeholder.com/150?text=Pack" alt="Apparatus" class="product-img">
+                <div>
+                  <div style="font-weight:600;">Common Apparatus Pack</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">HKD 100</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('apparatus', -1)">-</button>
+                <span class="qty-val" id="qty-apparatus">0</span>
+                <button class="qty-btn" onclick="updateQty('apparatus', 1)">+</button>
+              </div>
+            </td>
+            <td class="row-total" id="total-apparatus">HKD 0</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-info-cell">
+                <img src="https://via.placeholder.com/150?text=Poster" alt="Poster" class="product-img">
+                <div>
+                  <div style="font-weight:600;">Periodic Table Poster (A3 Size)</div>
+                  <div style="font-size:0.8rem; color:var(--text-muted);">HKD 80</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty('poster', -1)">-</button>
+                <span class="qty-val" id="qty-poster">0</span>
+                <button class="qty-btn" onclick="updateQty('poster', 1)">+</button>
+              </div>
+            </td>
+            <td class="row-total" id="total-poster">HKD 0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stem-section">
+      <h3>3. 結算與付款</h3>
+      <div class="summary-box">
+        <div id="product-summary-list" class="summary-details">
+          <p style="font-style:italic;">尚未選擇產品</p>
+        </div>
+        <div class="summary-line"><span>運費</span><span id="ship-fee">HKD 30</span></div>
+        <div class="summary-line discount" id="discount-row" style="display:none;"><span>10% 折扣優惠</span><span id="discount-val">-HKD 0</span></div>
+        <div class="summary-line total"><span>總額</span><span id="total-val">HKD 0</span></div>
+      </div>
+
+      <label style="margin-top:20px; display:block; font-weight:600;">付款方式</label>
+      <select id="pay-method" class="btn" style="border:1px solid #ddd; text-align:left; font-weight:normal; background:white;" onchange="togglePayInfo()">
+        <option value="">-- 請選擇付款方式 --</option>
+        <option value="Bank Transfer">Bank Transfer (銀行轉帳)</option>
+        <option value="FPS">FPS (轉數快)</option>
+        <option value="AlipayHK">AlipayHK (支付寶)</option>
+        <option value="PayMe">PayMe</option>
+      </select>
+      
+      <div id="info-BankTransfer" class="payment-info-box">
+        <p>恒生銀行：369 484852 883 (Stemtitute)</p>
+      </div>
+      <div id="info-FPS" class="payment-info-box">
+        <p>FPS 識別碼：91449574 (Stemtitute)</p>
+        <div class="qr-code">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="#f3f4f6" rx="8"/>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">FPS QR CODE</text>
+          </svg>
+        </div>
+      </div>
+      <div id="info-AlipayHK" class="payment-info-box">
+        <p>AlipayHK：67741386</p>
+        <div class="qr-code">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="#f3f4f6" rx="8"/>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">ALIPAYHK QR</text>
+          </svg>
+        </div>
+      </div>
+      <div id="info-PayMe" class="payment-info-box">
+        <p><a href="https://payme.hsbc/stemtitute" target="_blank">按此開啟 PayMe 付款</a></p>
+        <div class="qr-code">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="#f3f4f6" rx="8"/>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">PAYME QR</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div id="error1" class="error-msg"></div>
+    <button class="btn btn-primary" onclick="validateAndGoPage2()">下一步：確認訂單</button>
+  </div>
+
+  <div id="page2" class="page">
+    <div class="stem-header"><h1>確認您的訂單</h1></div>
+    <div class="stem-section">
+      <h3>訂單詳情回顧</h3>
+      <div id="review-content"></div>
+    </div>
+    <div class="stem-section">
+      <h3>付款及上傳收據</h3>
+      <div id="payment-reminder-container" style="background: #eff6ff; border: 2px solid var(--primary-color); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+        <div id="payment-reminder-msg" style="font-weight: bold; color: var(--primary-color); margin-bottom: 10px; font-size: 1.1rem;"></div>
+        <div id="payment-reminder-qr"></div>
+      </div>
+      <label style="font-weight: 600; display: block; margin-bottom: 8px;">請上傳付款收據 (截圖或照片)：</label>
+      <input type="file" id="receipt-file" accept="image/*,.pdf" class="btn" style="border:1px solid #ddd; font-size:0.9rem; background:white;">
+    </div>
+    <button id="final-submit-btn" class="btn btn-primary" onclick="submitFinal()">確認並提交</button>
+    <button class="btn btn-secondary" onclick="goPage1()">返回修改</button>
+  </div>
+
+  <div id="page3" class="page">
+    <div class="stem-section" style="text-align: center; padding: 50px 20px;">
+      <h1 style="color: var(--accent-green);">訂單已成功提交</h1>
+      <div id="order-id-display" style="background: #f1f5f9; padding: 15px; border-radius: 8px; font-weight: bold; margin: 20px 0;"></div>
+      <p>我們將會盡快處理您的訂單。如需查詢，請聯絡客服。</p>
+      <button class="btn btn-primary" onclick="location.reload()">返回首頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQk3PNBWA7EFNXlL0YRWXXq12SgPStP4u2TDMaHwhw5gEtAPLiEemZAaC9QBCAMSvzWQ/exec"; 
+
+  const products = [
+    { name: "幼兒科學套裝試堂", price: 80 }, { name: "幼兒科學套裝 1-6 課", price: 360 },
+    { name: "幼兒科學套裝 7-12 課", price: 360 }, { name: "幼兒科學套裝 13-18 課", price: 360 },
+    { name: "幼兒科學套裝 19-24 課", price: 360 }, { name: "小學科學套裝試堂", price: 80 },
+    { name: "小學科學套裝 1-6 課", price: 360 }, { name: "小學科學套裝 7-12 課", price: 360 },
+    { name: "小學科學套裝 13-18 課", price: 360 }, { name: "小學科學套裝 19-24 課", price: 360 }
+  ];
+
+  const otherProducts = {
+    'labcoat-s': { name: "Stemtitute Lab Coat (Size S)", price: 150, qty: 0 },
+    'labcoat-m': { name: "Stemtitute Lab Coat (Size M)", price: 150, qty: 0 },
+    'labcoat-l': { name: "Stemtitute Lab Coat (Size L)", price: 150, qty: 0 },
+    'apparatus': { name: "Common Apparatus Pack", price: 100, qty: 0 },
+    'poster': { name: "Periodic Table Poster (A3 Size)", price: 80, qty: 0 }
+  };
+
+  function updateQty(id, delta) {
+    const item = otherProducts[id];
+    item.qty = Math.max(0, item.qty + delta);
+    document.getElementById(`qty-${id}`).innerText = item.qty;
+    document.getElementById(`total-${id}`).innerText = "HKD " + (item.qty * item.price);
+    calculateTotal();
+  }
+
+  function showAlert(msg) {
+    document.getElementById('alert-msg').innerText = msg;
+    document.getElementById('custom-alert').style.display = 'flex';
+  }
+
+  function closeAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
+  }
+
+  // --- 修復邏輯：避免重複初始化清空內容 ---
+  let isInitialized = false;
+
+  function generateStudentForms() {
+    const container = document.getElementById('student-container');
+    const select = document.getElementById('student-count');
+    const count = parseInt(select.value);
+
+    // 如果 count 為 0 且還沒初始化過，清空顯示
+    if (count === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    // 判斷是否已經有對應數量的 block，避免每次執行都 innerHTML = ''
+    const currentBlocks = container.getElementsByClassName('student-block').length;
+    if (currentBlocks === count) return; 
+
+    container.innerHTML = ''; // 只有當人數變動時才清空
+
+    for (let i = 0; i < count; i++) {
+      const div = document.createElement('div');
+      div.className = 'stem-section student-block';
+      div.id = `student-block-${i}`;
+      div.innerHTML = `
+        <h3>學生 ${i+1} 資訊</h3>
+        <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0;">
+          <label style="display:inline-block; margin-right:20px; cursor:pointer;"><input type="radio" name="stu-type-${i}" value="new" checked onchange="toggleStudentMode(${i})"> 新學生</label>
+          <label style="display:inline-block; cursor:pointer;"><input type="radio" name="stu-type-${i}" value="existing" onchange="toggleStudentMode(${i})"> 現有學生</label>
+        </div>
+        <div id="mode-new-${i}">
+          <label>學生姓名</label><input type="text" id="stu-name-new-${i}" oninput="calculateTotal()">
+          <label>登入 Email</label><input type="email" id="stu-email-new-${i}">
+        </div>
+        <div id="mode-exist-${i}" style="display:none; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <label>驗證方式</label>
+          <select id="verify-method-${i}" onchange="toggleVerifyMethod(${i})">
+            <option value="id">輸入學生 ID</option>
+            <option value="name_email">輸入姓名 + 登入 Email</option>
+          </select>
+          <div id="verify-id-box-${i}"><label>學生 ID</label><input type="text" id="stu-id-exist-${i}"></div>
+          <div id="verify-name-box-${i}" style="display:none;">
+            <label>學生姓名</label><input type="text" id="stu-name-exist-${i}">
+            <label>登入 Email</label><input type="email" id="stu-email-exist-${i}">
+          </div>
+          <input type="hidden" id="stu-hidden-id-${i}" value="">
+          <button type="button" id="verify-btn-${i}" class="btn btn-secondary" style="width:auto; padding:8px 20px; margin-top:10px;" onclick="verifyStudent(${i})">驗證身分</button>
+          <div id="verify-msg-${i}" style="margin-top:10px; font-size:0.9rem; font-weight:bold; line-height: 1.4;"></div>
+        </div>
+        <div id="product-section-${i}">
+          <label style="margin-top:20px; display:block; font-weight:600;">選擇產品</label>
+          <div class="product-grid" id="product-grid-${i}">
+            ${products.map(p => `
+              <label class="product-item">
+                <input type="checkbox" name="prod-${i}" value="${p.name}" data-price="${p.price}" onchange="calculateTotal()">
+                <span>${p.name} - HKD ${p.price}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    }
+    calculateTotal();
+  }
+
+  function toggleStudentMode(i) {
+    const isNew = document.querySelector(`input[name="stu-type-${i}"]:checked`).value === 'new';
+    document.getElementById(`mode-new-${i}`).style.display = isNew ? 'block' : 'none';
+    document.getElementById(`mode-exist-${i}`).style.display = isNew ? 'none' : 'block';
+    const prodSection = document.getElementById(`product-section-${i}`);
+    if(isNew) {
+      prodSection.style.display = 'block';
+      updateProductGrid(i, products);
+    } else {
+      prodSection.style.display = 'none';
+    }
+    calculateTotal();
+  }
+
+  function updateProductGrid(i, productList) {
+    const grid = document.getElementById('product-grid-' + i);
+    if (!productList || productList.length === 0) {
+      grid.innerHTML = '<p style="color:var(--text-muted);">無可購買之產品或已購全套。</p>';
+      return;
+    }
+    grid.innerHTML = productList.map(p => `
+      <label class="product-item">
+        <input type="checkbox" name="prod-${i}" value="${p.name}" data-price="${p.price}" onchange="calculateTotal()">
+        <span>${p.name} - HKD ${p.price}</span>
+      </label>
+    `).join('');
+  }
+
+  function toggleVerifyMethod(i) {
+    const method = document.getElementById('verify-method-' + i).value;
+    document.getElementById('verify-id-box-' + i).style.display = method === 'id' ? 'block' : 'none';
+    document.getElementById('verify-name-box-' + i).style.display = method === 'id' ? 'none' : 'block';
+  }
+
+  async function verifyStudent(i) {
+    const method = document.getElementById('verify-method-' + i).value;
+    const msgEl = document.getElementById('verify-msg-' + i);
+    const btn = document.getElementById('verify-btn-' + i);
+    const prodSection = document.getElementById('product-section-' + i);
+    let params = { action: 'verify_student' };
+
+    if (method === 'id') {
+      params.student_id = document.getElementById('stu-id-exist-' + i).value.trim();
+      if (!params.student_id) return (msgEl.innerText = "請輸入學生 ID");
+    } else {
+      params.student_name = document.getElementById('stu-name-exist-' + i).value.trim();
+      params.student_email = document.getElementById('stu-email-exist-' + i).value.trim();
+      if (!params.student_name || !params.student_email) return (msgEl.innerText = "請填寫姓名及電郵");
+    }
+
+    msgEl.innerText = "驗證中...";
+    btn.disabled = true;
+
+    try {
+      const response = await fetch(SCRIPT_URL + "?" + new URLSearchParams(params));
+      const result = await response.json();
+      if (result.status === 'success') {
+        msgEl.innerHTML = `驗證成功！<br>學生姓名：${result.student_name}<br>登入 Email：${result.student_email}`;
+        msgEl.style.color = "var(--accent-green)";
+        prodSection.style.display = 'block';
+        updateProductGrid(i, result.available_products);
+        document.getElementById('stu-hidden-id-' + i).value = result.student_id;
+        document.getElementById('stu-name-exist-' + i).value = result.student_name;
+        document.getElementById('stu-email-exist-' + i).value = result.student_email;
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (e) {
+      msgEl.innerText = "驗證失敗: " + e.message;
+      msgEl.style.color = "var(--error-red)";
+    } finally {
+      btn.disabled = false;
+      calculateTotal();
+    }
+  }
+
+  function calculateTotal() {
+    let subtotal = 0;
+    const count = parseInt(document.getElementById('student-count').value || 0);
+    const summaryList = document.getElementById('product-summary-list');
+    let summaryHtml = '';
+
+    for (let i = 0; i < count; i++) {
+      const selected = Array.from(document.querySelectorAll(`input[name="prod-${i}"]:checked`));
+      if (selected.length > 0) {
+        const typeEl = document.querySelector(`input[name="stu-type-${i}"]:checked`);
+        if(!typeEl) continue;
+        const isNew = typeEl.value === 'new';
+        const name = (isNew ? document.getElementById(`stu-name-new-${i}`).value : document.getElementById(`stu-name-exist-${i}`).value) || `學生 ${i+1}`;
+        summaryHtml += `<div style="margin-top:10px;"><strong>${name}:</strong></div>`;
+        selected.forEach(cb => {
+          const p = parseInt(cb.dataset.price);
+          subtotal += p;
+          summaryHtml += `<div class="summary-line" style="padding-left:10px;"><span>• ${cb.value}</span><span>HKD ${p}</span></div>`;
+        });
+      }
+    }
+
+    let hasOther = false;
+    for (const key in otherProducts) {
+      const item = otherProducts[key];
+      if (item.qty > 0) {
+        if (!hasOther) {
+          summaryHtml += `<div style="margin-top:10px;"><strong>其他商品:</strong></div>`;
+          hasOther = true;
+        }
+        const lineTotal = item.qty * item.price;
+        subtotal += lineTotal;
+        summaryHtml += `<div class="summary-line" style="padding-left:10px;"><span>• ${item.name} x ${item.qty}</span><span>HKD ${lineTotal}</span></div>`;
+      }
+    }
+
+    summaryList.innerHTML = summaryHtml || '<p style="font-style:italic;">尚未選擇產品</p>';
+    let discount = subtotal >= 1000 ? Math.round(subtotal * 0.1) : 0;
+    let shipping = (subtotal >= 500 || subtotal === 0) ? 0 : 30;
+    
+    document.getElementById('ship-fee').innerText = "HKD " + shipping;
+    document.getElementById('discount-row').style.display = discount > 0 ? 'flex' : 'none';
+    document.getElementById('discount-val').innerText = "-HKD " + discount;
+    document.getElementById('total-val').innerText = "HKD " + (subtotal + shipping - discount);
+    
+    return { subtotal, total: subtotal + shipping - discount, shipping, discount };
+  }
+
+  async function validateAndGoPage2() {
+    const errEl = document.getElementById('error1');
+    errEl.style.display = 'none';
+    const totals = calculateTotal();
+    const receiver = document.getElementById('receiver').value;
+    const address = document.getElementById('address').value;
+    const payMethod = document.getElementById('pay-method').value;
+
+    if (!receiver || !address || totals.subtotal === 0 || !payMethod) {
+      errEl.innerText = "請填寫完整收件資料，並至少選擇一項產品及付款方式。";
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const count = parseInt(document.getElementById('student-count').value);
+    const emailList = [];
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading-text').innerText = "驗證資料中...";
+
+    try {
+      for (let i = 0; i < count; i++) {
+        const isNew = document.querySelector(`input[name="stu-type-${i}"]:checked`).value === 'new';
+        const email = isNew ? document.getElementById(`stu-email-new-${i}`).value.trim().toLowerCase() : document.getElementById(`stu-email-exist-${i}`).value.trim().toLowerCase();
+        const hasProducts = document.querySelectorAll(`input[name="prod-${i}"]:checked`).length > 0;
+        if (hasProducts) {
+          if (!email) throw new Error(`請填寫學生 ${i+1} 的登入 Email`);
+          if (emailList.includes(email)) throw new Error(`錯誤：檢測到重複的登入 Email (${email})`);
+          emailList.push(email);
+          if (isNew) {
+            const resp = await fetch(SCRIPT_URL + "?" + new URLSearchParams({ action: 'verify_student', is_new_student: 'true', student_email: email }));
+            const result = await resp.json();
+            if (result.status === 'error') throw new Error(`學生 ${i+1}: ${result.message}`);
+          } else if (!document.getElementById(`stu-hidden-id-${i}`).value) {
+            throw new Error(`請先驗證學生 ${i+1} 的現有學生身分`);
+          }
+        }
+      }
+      goPage2();
+    } catch (e) {
+      errEl.innerText = e.message;
+      errEl.style.display = 'block';
+    } finally {
+      document.getElementById('loading').style.display = 'none';
+    }
+  }
+
+  function goPage2() {
+    const totals = calculateTotal();
+    let reviewHtml = `
+      <div class="review-item">
+        <div class="review-label">收件人資料</div>
+        <div class="review-value">${document.getElementById('receiver').value} (${document.getElementById('phone').value})</div>
+        <div class="review-subtext">${document.getElementById('email').value}</div>
+        <div class="review-subtext">${document.getElementById('address').value}</div>
+      </div>
+    `;
+    const count = parseInt(document.getElementById('student-count').value);
+    for(let i=0; i<count; i++) {
+      const selectedProds = Array.from(document.querySelectorAll(`input[name="prod-${i}"]:checked`));
+      if(selectedProds.length > 0) {
+        const isNew = document.querySelector(`input[name="stu-type-${i}"]:checked`).value === 'new';
+        const name = isNew ? document.getElementById(`stu-name-new-${i}`).value : document.getElementById(`stu-name-exist-${i}`).value;
+        const email = isNew ? document.getElementById(`stu-email-new-${i}`).value : document.getElementById(`stu-email-exist-${i}`).value;
+        reviewHtml += `
+          <div class="review-item">
+            <div class="review-label">學生 ${i+1}: ${name} (${isNew ? '新學生' : '現有學生'})</div>
+            <div class="review-subtext">登入 Email: ${email}</div>
+            <div class="review-value">
+              ${selectedProds.map(p => `• ${p.value} (HKD ${p.dataset.price})`).join('<br>')}
+            </div>
+          </div>
+        `;
+      }
+    }
+    let otherHtml = '';
+    for (const key in otherProducts) {
+      const item = otherProducts[key];
+      if (item.qty > 0) otherHtml += `• ${item.name} x ${item.qty} (HKD ${item.qty * item.price})<br>`;
+    }
+    if (otherHtml) reviewHtml += `<div class="review-item"><div class="review-label">其他商品</div><div class="review-value">${otherHtml}</div></div>`;
+    reviewHtml += `
+      <div class="review-item">
+        <div class="review-label">費用結算</div>
+        <div class="summary-line"><span>產品小計</span><span>HKD ${totals.subtotal}</span></div>
+        <div class="summary-line"><span>運費</span><span>HKD ${totals.shipping}</span></div>
+        ${totals.discount > 0 ? `<div class="summary-line" style="color:var(--error-red);"><span>10% 折扣優惠</span><span>-HKD ${totals.discount}</span></div>` : ''}
+        <div class="review-value" style="font-size:1.2rem; font-weight:bold; color:var(--primary-color); border-top:1px solid #ddd; padding-top:10px; margin-top:10px;">
+          應付總額: HKD ${totals.total}
+        </div>
+        <div class="review-subtext" style="margin-top:5px;">付款方式: ${document.getElementById('pay-method').value}</div>
+      </div>
+    `;
+    document.getElementById('review-content').innerHTML = reviewHtml;
+    const payMethod = document.getElementById('pay-method').value;
+    let qrHtml = "";
+    if(payMethod.includes("FPS")) qrHtml = `<div class="qr-code"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#f3f4f6" rx="8"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">FPS QR CODE</text></svg></div>`;
+    else if(payMethod.includes("PayMe")) qrHtml = `<div class="qr-code"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#f3f4f6" rx="8"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">PAYME QR</text></svg></div>`;
+    else if(payMethod.includes("Alipay")) qrHtml = `<div class="qr-code"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#f3f4f6" rx="8"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#333">ALIPAYHK QR</text></svg></div>`;
+    document.getElementById('payment-reminder-msg').innerText = "請完成付款並上傳收據";
+    document.getElementById('payment-reminder-qr').innerHTML = qrHtml;
+    document.getElementById('page1').classList.remove('active');
+    document.getElementById('page2').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function goPage1() { 
+    document.getElementById('page2').classList.remove('active'); 
+    document.getElementById('page1').classList.add('active'); 
+    window.scrollTo(0, 0);
+  }
+
+  function togglePayInfo() {
+    document.querySelectorAll('.payment-info-box').forEach(el => el.style.display = 'none');
+    const val = document.getElementById('pay-method').value.replace(/\s+/g, '');
+    if (val && document.getElementById('info-' + val)) document.getElementById('info-' + val).style.display = 'block';
+  }
+
+  async function submitFinal() {
+    const fileInput = document.getElementById('receipt-file');
+    if (fileInput.files.length === 0) return showAlert("請先上傳付款收據。");
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading-text').innerText = "正在提交訂單...";
+    let finalData = [];
+    const count = parseInt(document.getElementById('student-count').value || 0);
+    for(let i=0; i<count; i++) {
+      const selected = document.querySelectorAll(`input[name="prod-${i}"]:checked`);
+      if(selected.length > 0) {
+        const isNew = document.querySelector(`input[name="stu-type-${i}"]:checked`).value === 'new';
+        const name = isNew ? document.getElementById(`stu-name-new-${i}`).value : document.getElementById(`stu-name-exist-${i}`).value;
+        const email = isNew ? document.getElementById(`stu-email-new-${i}`).value : document.getElementById(`stu-email-exist-${i}`).value;
+        const id = isNew ? "" : document.getElementById(`stu-hidden-id-${i}`).value;
+        selected.forEach(cb => {
+          finalData.push({ is_new: isNew, student_id: id, student_name: name, student_email: email, chosen_product: cb.value });
+        });
+      }
+    }
+    for (const key in otherProducts) {
+      const item = otherProducts[key];
+      if (item.qty > 0) finalData.push({ is_new: false, student_id: "", student_name: "", student_email: "", chosen_product: `${item.name} x ${item.qty}` });
+    }
+    const totals = calculateTotal();
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async function() {
+      const payload = {
+        order_number: "STEM-" + Date.now(),
+        receiver: document.getElementById('receiver').value,
+        email: document.getElementById('email').value,
+        tel: document.getElementById('phone').value,
+        mailing_address: document.getElementById('address').value,
+        students: finalData,
+        total_amount: totals.total,
+        shipping: totals.shipping,
+        discount: totals.discount,
+        subtotal: totals.subtotal,
+        payment_method: document.getElementById('pay-method').value,
+        receipt_base64: reader.result.split(',')[1],
+        receipt_filename: file.name,
+        receipt_mimetype: file.type
+      };
+      try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const res = await response.json();
+        if(res.status === 'success') {
+          document.getElementById('page2').classList.remove('active');
+          document.getElementById('page3').classList.add('active');
+          document.getElementById('order-id-display').innerText = "訂單編號: " + payload.order_number;
+          window.scrollTo(0, 0);
+        } else { showAlert("提交失敗: " + res.message); }
+      } catch(e) { showAlert("網絡錯誤: " + e.message); }
+      finally { document.getElementById('loading').style.display = 'none'; }
+    };
+  }
+
+  // 確保只初始化一次
+  window.onload = () => {
+    if(!isInitialized) {
+      // 不要在 onload 直接調用生成，除非 select 已經有值
+      const count = parseInt(document.getElementById('student-count').value);
+      if(count > 0) generateStudentForms();
+      calculateTotal();
+      isInitialized = true;
+    }
+  };
+</script>
+</body>
+</html>
